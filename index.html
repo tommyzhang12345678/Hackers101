@@ -1,0 +1,48 @@
+<!-- HTML Structure -->
+<div class="login-container">
+  <form id="login-form">
+    <h2>Welcome Back</h2>
+    <div class="input-group">
+      <input type="email" id="email" placeholder="Email" required>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" required>
+    </div>
+    <button type="submit">Login</button>
+    <p id="error-message"></p>
+  </form>
+</div>
+
+<!-- CSS Styling -->
+<style>
+  body { font-family: sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .login-container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); width: 300px; text-align: center; color: white; }
+  .input-group input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; background: rgba(255, 255, 255, 0.2); color: white; }
+  button { width: 100%; padding: 10px; border: none; border-radius: 5px; background: #fff; color: #764ba2; font-weight: bold; cursor: pointer; transition: 0.3s; }
+  button:hover { background: #eee; }
+  #error-message { color: #ff8c8c; font-size: 12px; margin-top: 10px; }
+</style>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNpIfAaaMkebfaCF_yvw-c96syUAzuAfY",
+    authDomain: "hackers101-f36ec.firebaseapp.com",
+    databaseURL: "https://hackers101-f36ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "hackers101-f36ec",
+    storageBucket: "hackers101-f36ec.firebasestorage.app",
+    messagingSenderId: "549407812574",
+    appId: "1:549407812574:web:6f122016637eb20b3d0b4f",
+    measurementId: "G-JF8B21M4KH"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
