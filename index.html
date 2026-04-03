@@ -45,4 +45,22 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+
+  const loginForm = document.getElementById('login-form');
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Success! Logged in as " + userCredential.user.email);
+        // window.location.href = "dashboard.html"; // Redirect after login
+      })
+      .catch((error) => {
+        document.getElementById('error-message').innerText = error.message;
+      });
+  });
 </script>
+
+
