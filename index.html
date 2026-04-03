@@ -1,66 +1,78 @@
-<!-- HTML Structure -->
-<div class="login-container">
-  <form id="login-form">
-    <h2>Welcome Back</h2>
-    <div class="input-group">
-      <input type="email" id="email" placeholder="Email" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Firebase Site</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f4f4f4; }
+        .auth-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        .toggle-link { font-size: 0.8em; color: #555; margin-top: 15px; text-align: center; cursor: pointer; text-decoration: underline; }
+        #user-info { margin-top: 20px; padding: 10px; background: #e9f7ef; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <h2 id="form-title">Login</h2>
+    
+    <div id="auth-form">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password (min 6 chars)">
+        <button id="submit-btn">Login</button>
+        <div class="toggle-link" id="toggle-auth">Need an account? Sign Up</div>
     </div>
-    <div class="input-group">
-      <input type="password" id="password" placeholder="Password" required>
+
+    <div id="user-info">
+        <p id="user-email"></p>
+        <button id="logout-btn" style="background: #dc3545;">Logout</button>
     </div>
-    <button type="submit">Login</button>
-    <p id="error-message"></p>
-  </form>
 </div>
 
-<!-- CSS Styling -->
-<style>
-  body { font-family: sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); height: 100vh; display: flex; align-items: center; justify-content: center; }
-  .login-container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); width: 300px; text-align: center; color: white; }
-  .input-group input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; background: rgba(255, 255, 255, 0.2); color: white; }
-  button { width: 100%; padding: 10px; border: none; border-radius: 5px; background: #fff; color: #764ba2; font-weight: bold; cursor: pointer; transition: 0.3s; }
-  button:hover { background: #eee; }
-  #error-message { color: #ff8c8c; font-size: 12px; margin-top: 10px; }
-</style>
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    import { handleAuth, handleLogout, onAuthStateChanged, auth } from './main.js';
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDNpIfAaaMkebfaCF_yvw-c96syUAzuAfY",
-    authDomain: "hackers101-f36ec.firebaseapp.com",
-    databaseURL: "https://hackers101-f36ec-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "hackers101-f36ec",
-    storageBucket: "hackers101-f36ec.firebasestorage.app",
-    messagingSenderId: "549407812574",
-    appId: "1:549407812574:web:6f122016637eb20b3d0b4f",
-    measurementId: "G-JF8B21M4KH"
-  };
+    const title = document.getElementById('form-title');
+    const submitBtn = document.getElementById('submit-btn');
+    const toggleLink = document.getElementById('toggle-auth');
+    const authForm = document.getElementById('auth-form');
+    const userInfo = document.getElementById('user-info');
+    const userEmail = document.getElementById('user-email');
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+    let isLoginMode = true;
 
-  const loginForm = document.getElementById('login-form');
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    // Toggle between Login and Sign Up
+    toggleLink.addEventListener('click', () => {
+        isLoginMode = !isLoginMode;
+        title.innerText = isLoginMode ? "Login" : "Sign Up";
+        submitBtn.innerText = isLoginMode ? "Login" : "Sign Up";
+        toggleLink.innerText = isLoginMode ? "Need an account? Sign Up" : "Already have an account? Login";
+    });
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert("Success! Logged in as " + userCredential.user.email);
-        // window.location.href = "dashboard.html"; // Redirect after login
-      })
-      .catch((error) => {
-        document.getElementById('error-message').innerText = error.message;
-      });
-  });
+    // Handle Button Click
+    submitBtn.addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        handleAuth(email, pass, isLoginMode);
+    });
+
+    // Handle Logout
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+    // Watch for Login state
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            authForm.style.display = "none";
+            userInfo.style.display = "block";
+            userEmail.innerText = "Welcome, " + user.email;
+        } else {
+            authForm.style.display = "block";
+            userInfo.style.display = "none";
+        }
+    });
 </script>
 
-
+</body>
+</html>
