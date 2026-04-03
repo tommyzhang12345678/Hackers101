@@ -15,64 +15,27 @@
 </head>
 <body>
 
-<div class="auth-card">
-    <h2 id="form-title">Login</h2>
-    
-    <div id="auth-form">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password (min 6 chars)">
-        <button id="submit-btn">Login</button>
-        <div class="toggle-link" id="toggle-auth">Need an account? Sign Up</div>
-    </div>
-
-    <div id="user-info">
-        <p id="user-email"></p>
-        <button id="logout-btn" style="background: #dc3545;">Logout</button>
-    </div>
+<div class="card">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="pass" placeholder="Password">
+  <button id="btnLogin">Login</button>
+  <button id="btnGoogle" style="background:#db4437">Login with Google</button>
+  <p><a href="#" id="btnReset">Forgot Password?</a></p>
+  <p>New? <a href="./Oauth/signup.html">Sign Up here</a></p>
 </div>
 
 <script type="module">
-    import { handleAuth, handleLogout, onAuthStateChanged, auth } from './main.js';
-
-    const title = document.getElementById('form-title');
-    const submitBtn = document.getElementById('submit-btn');
-    const toggleLink = document.getElementById('toggle-auth');
-    const authForm = document.getElementById('auth-form');
-    const userInfo = document.getElementById('user-info');
-    const userEmail = document.getElementById('user-email');
-
-    let isLoginMode = true;
-
-    // Toggle between Login and Sign Up
-    toggleLink.addEventListener('click', () => {
-        isLoginMode = !isLoginMode;
-        title.innerText = isLoginMode ? "Login" : "Sign Up";
-        submitBtn.innerText = isLoginMode ? "Login" : "Sign Up";
-        toggleLink.innerText = isLoginMode ? "Need an account? Sign Up" : "Already have an account? Login";
-    });
-
-    // Handle Button Click
-    submitBtn.addEventListener('click', () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
-        handleAuth(email, pass, isLoginMode);
-    });
-
-    // Handle Logout
-    document.getElementById('logout-btn').addEventListener('click', handleLogout);
-
-    // Watch for Login state
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            authForm.style.display = "none";
-            userInfo.style.display = "block";
-            userEmail.innerText = "Welcome, " + user.email;
-        } else {
-            authForm.style.display = "block";
-            userInfo.style.display = "none";
-        }
-    });
+  import { login, loginWithGoogle, resetPassword } from './js/auth.js';
+  
+  document.getElementById('btnLogin').onclick = () => login(email.value, pass.value);
+  document.getElementById('btnGoogle').onclick = () => loginWithGoogle();
+  document.getElementById('btnReset').onclick = () => {
+    const mail = prompt("Enter your email:");
+    if(mail) resetPassword(mail);
+  };
 </script>
+
 
 </body>
 </html>
