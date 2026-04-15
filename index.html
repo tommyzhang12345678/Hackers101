@@ -56,8 +56,8 @@
   const analytics = getAnalytics(app);
 
   function login() {
-  var email = document.getElementById('email');
-  var password = password = document.getElementById('pass');
+  var email = document.getElementById('email').value;
+  var password = password = document.getElementById('pass').value;
 
   const auth = getAuth();
   createUserWithEmailAndPassword(auth, email, password)
