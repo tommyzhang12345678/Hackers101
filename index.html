@@ -40,9 +40,22 @@
   }
 
   function makeEmailCredential(email, password) {
-  // [START auth_make_email_credential]
+  // [START auth_make_email_cr
   var credential = firebase.auth.EmailAuthProvider.credential(email, password);
   // [END auth_make_email_credential]
+  
+  
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
 }
 </script>
 
