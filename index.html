@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Firebase Site</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #ee8d8d; }
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #ffffff; }
         .auth-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
         input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
         button { width: 100%; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
         .toggle-link { font-size: 0.8em; color: #555; margin-top: 15px; text-align: center; cursor: pointer; text-decoration: underline; }
         #user-info { margin-top: 20px; padding: 10px; background: #e9f7ef; display: none; }
     </style>
+    <script type="module" src="test.js"></script>
 </head>
 <body>
 
@@ -26,28 +27,51 @@
 </div>
 
 <script type="module">
-  import {loginWithGoogle, resetPassword, firebaseConfig } from './js/auth.js';
   import firebase from "firebase/app";
   import "firebase/auth";
+  import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
+
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNpIfAaaMkebfaCF_yvw-c96syUAzuAfY",
+    authDomain: "hackers101-f36ec.firebaseapp.com",
+    databaseURL: "https://hackers101-f36ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "hackers101-f36ec",
+    storageBucket: "hackers101-f36ec.firebasestorage.app",
+    messagingSenderId: "549407812574",
+    appId: "1:549407812574:web:6f122016637eb20b3d0b4f",
+    measurementId: "G-JF8B21M4KH"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
   function login() {
   var email = document.getElementById('email');
   var password = password = document.getElementById('pass');
-  // [START auth_signin_password]
-  firebase.auth().signInWithEmailAndPassword(email, password)
+
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
-      var user = userCredential.user;
+      // Signed up 
+      const user = userCredential.user;
       // ...
-    })
+  })
     .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorCode);
-      alert(errorMessage);
-    });
-  // [END auth_signin_password]
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+  });
+
 }
 
   
