@@ -19,7 +19,7 @@
   <h2>Login</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="pass" placeholder="Password">
-  <button id="btnLogin" onclick="login()">Login</button>
+  <button id="btnLogin">Login</button>
   <button id="btnGoogle" style="background:#db4437">Login with Google</button>
   <p><a href="#" id="btnReset">Forgot Password?</a></p>
   <p>New? <a href="./Oauth/signup.html">Sign Up here</a></p>
@@ -29,7 +29,6 @@
   import firebase from "firebase/app";
   import "firebase/auth";
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
 
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
@@ -70,11 +69,9 @@
       const errorMessage = error.message;
       alert(errorMessage);
   });
-
-
 }
 
-  
+document.getElementById('btnLogin').addEventListener('click', login);
 </script>
 
 
