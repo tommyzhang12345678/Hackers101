@@ -19,7 +19,7 @@
   <h2>Login</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="pass" placeholder="Password">
-  <button id="btnLogin">Login</button>
+  <button id="btnLogin" onclick="login()">Login</button>
   <button id="btnGoogle" style="background:#db4437">Login with Google</button>
   <p><a href="#" id="btnReset">Forgot Password?</a></p>
   <p>New? <a href="./Oauth/signup.html">Sign Up here</a></p>
@@ -32,31 +32,20 @@
   import "firebase/auth";
 
 
-  function login(){
+  function login {
     const email = document.getElementById('email');
     const password = document.getElementById('.pass');
     makeEmailCredential(email, pass);
 
+    const auth = getAuth();
+      // Directly sign in using the modular function
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Logged in:", userCredential.user);
+      if (error) {
+      console.error("Login Error:", error.code, error.message);
   }
 
-  function makeEmailCredential(email, password) {
-  // [START auth_make_email_cr
-  var credential = firebase.auth.EmailAuthProvider.credential(email, password);
-  // [END auth_make_email_credential]
   
-  
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
-}
 </script>
 
 

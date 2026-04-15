@@ -1,11 +1,5 @@
-import { initializeApp } from "https://gstatic.com";
-import { getAuth, validatePassword, signOut } from "firebase/auth";
-
-
-import { 
-  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
-  sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider, signOut 
-} from "https://gstatic.com";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
