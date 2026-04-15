@@ -1,4 +1,7 @@
 import { initializeApp } from "https://gstatic.com";
+import { getAuth, validatePassword, signOut } from "firebase/auth";
+
+
 import { 
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
   sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider, signOut 
@@ -9,7 +12,7 @@ export const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 // Auth
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDNpIfAaaMkebfaCF_yvw-c96syUAzuAfY",
   authDomain: "hackers101-f36ec.firebaseapp.com",
   databaseURL: "https://hackers101-f36ec-default-rtdb.asia-southeast1.firebasedatabase.app",

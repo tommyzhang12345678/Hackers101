@@ -26,14 +26,24 @@
 </div>
 
 <script type="module">
-  import { login, loginWithGoogle, resetPassword } from './js/auth.js';
-  
-  document.getElementById('btnLogin').onclick = () => login(email.value, pass.value);
-  document.getElementById('btnGoogle').onclick = () => loginWithGoogle();
-  document.getElementById('btnReset').onclick = () => {
-    const mail = prompt("Enter your email:");
-    if(mail) resetPassword(mail);
-  };
+  import { login, loginWithGoogle, resetPassword, firebaseConfig } from './js/auth.js';
+  import { getAuth, validatePassword, signOut } from "firebase/auth";
+  import firebase from "firebase/app";
+  import "firebase/auth";
+
+
+  function login(){
+    const email = document.getElementById('email');
+    const password = document.getElementById('.pass');
+    makeEmailCredential(email, pass);
+
+  }
+
+  function makeEmailCredential(email, password) {
+  // [START auth_make_email_credential]
+  var credential = firebase.auth.EmailAuthProvider.credential(email, password);
+  // [END auth_make_email_credential]
+}
 </script>
 
 
