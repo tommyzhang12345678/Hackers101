@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macau Traffic</title>
+    <style>
+        :root {
+            --bg: #294c9d;
+            --card-bg: #1e293b;
+            --accent: #bdbdbd;
+            --text: #aeaeae;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 30px;
+            z-index: 100;
+        }
+
+        .controls { display: flex; gap: 10px; margin-top: 15px; }
+
+        input, select, button {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        /* Responsive Grid */
+       /* Container for all video cards */
+        .video-grid {
+            display: grid;
+            /* This ensures columns are exactly 352px wide */
+            grid-template-columns: repeat(auto-fill, 352px); 
+            gap: 5px;
+            justify-content: center;
+        }
+
+        /* Individual Card */
+        .video-card {
+            width: 352px;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* The Video element */
+        video {
+            width: 352px;
+            height: 288px;
+            /* Forces the video to fill the 352x288 area exactly */
+            object-fit: fill; 
+            display: block;
+            background: #000;
+        }
+
+        /* Optional: Adjust cam info to sit inside or above without adding height */
+        .cam-info {
+            background: #9f8686;
+            color: #000000;
+            font-size: 12px;
+            padding: 4px 8px;
+            font-family: sans-serif;
+        }
+
+        
+        .counter { font-size: 14px; color: var(--accent); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Macau Traffic <l>made by someone</l></h1>
+    <div id="totalCount" class="counter">Total Cameras: 0</div>
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search Camera ID...">
+        <select id="locationFilter">
+            <option value="all">All Locations</option>
+            <option value="m">Macau (M)</option>
+            <option value="t">Taipa (T)</option>
+            <option value="c">Coloane (C)</option>
+        </select>
+        <button onclick="resetFilters()">Reset</button>
+    </div>
+</header>
+
+<div class="video-grid" id="masterGrid">
+    <!-- Cards generate here automatically -->
+</div>
+<script type="module" src="/js/auth.js"></script>
+<script>
+    
+    const cameraList = [
+        "m2065", "m2054", "m2179", "m2259", "m2063", //北區-1
+        "m2043", "m2023", //北區-2
+        "m1196", "m2208", "m1033", "m2252", "m2322", "a1029","m2346","m2287","m2029","m2092","m2051", //東區-1
+        "m1134", "t4008", "m2289", "m1082", //外港區-1 
+        "m1125", "m2202", "m1091", "//", "m1086", "m1090", //外港區-2
+        "m2084", "m2303", "m2067", "m1129", "t4001", "m2013", //中區-1
+        "1",  ////中區-2 (placeholder for future cameras)
+        "1", //中區-3 (placeholder for future cameras)
+        "t2019", "t1014", "t1056", "t1053", "t1023", "t1030", //氹仔-1
+        "t2015", "t4202", "t2016", "t1059",
+        "1", "1", "1", "1", "1", "1",
+        
+    ];
+
+    const grid = document.getElementById('masterGrid');
+    const counterDisplay = document.getElementById('totalCount');
+    function generateCards() {
+        counterDisplay.innerText = `Total Cameras: ${cameraList.length}`;
+        
+        cameraList.forEach(camId => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.setAttribute('data-id', camId.toLowerCase());
+            
+            card.innerHTML = `
+                <div class="cam-info">
+                    <span>ID: ${camId.toUpperCase()}</span>
+                </div>
+                <video controls autoplay muted name="media">
+                    <source src="https://streaming1.dsatmacau.com/traffic/${camId}.m3u8" type="application/x-mpegurl">
+                </video>
+            `;
+            grid.appendChild(card);
+        });
+    }
+    function applyFilters() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const locationVal = document.getElementById('locationFilter').value;
+        const cards = document.querySelectorAll('.video-card');
+
+        cards.forEach(card => {
+            const id = card.getAttribute('data-id');
+            const matchesSearch = id.includes(searchText);
+            const matchesLoc = (locationVal === 'all' || id.startsWith(locationVal));
+
+            if (matchesSearch && matchesLoc) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('locationFilter').value = 'all';
+        applyFilters();
+    }
+    generateCards();
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('locationFilter').addEventListener('change', applyFilters);
+
+</script>
+
+</body>
+</html>

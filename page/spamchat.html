@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpamChat</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background: #f0f0f0; }
+        #message { width: 300px; padding: 10px; margin-bottom: 10px; }
+        #send { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        #chat { margin-top: 20px; width: 100%; max-width: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .arrayitem { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <button onclick="window.location.href='/index.html'">Home</button>
+    <input type="text" id="message" placeholder="Type your message here...">
+    <button id="send">Send</button>
+    <div id="chat"></div>
+
+    <script type="module" src="/js/auth.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+        import { doc, setDoc, serverTimestamp, getDoc, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+        
+        
+
+        const firebaseConfig = {
+        apiKey: "AIzaSyDNpIfAaaMkebfaCF_yvw-c96syUAzuAfY",
+        authDomain: "hackers101-f36ec.firebaseapp.com",
+        databaseURL: "https://hackers101-f36ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hackers101-f36ec",
+        storageBucket: "hackers101-f36ec.firebasestorage.app",
+        messagingSenderId: "549407812574",
+        appId: "1:549407812574:web:6f122016637eb20b3d0b4f",
+        measurementId: "G-JF8B21M4KH"
+        };
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+        const item = [];
+
+        async function updateDB(){
+            var Imessage = document.getElementById('message').value;
+            setDoc(doc(db, "Message", Imessage), {
+            User: " ",
+            Date: serverTimestamp(),
+            
+            });
+        }
+        document.getElementById('send').addEventListener('click', updateDB);
+
+
+            
+
+
+        // 1. Order by Date descending (newest first) and limit to 40 items
+        const q = query(
+            collection(db, "Message"), 
+            orderBy("Date", "desc"), 
+            limit(40)
+        );
+
+        const unsub = onSnapshot(q, (snapshot) => {
+            // Mapping IDs into an array
+            const idArray = snapshot.docs.map(doc => doc.id);
+
+            let totalHtml = '';
+            for (let i = 0; i < idArray.length; i++) {
+                totalHtml += `<p class="arrayitem">${idArray[i]}</p>`;
+            }
+
+            document.getElementById('chat').innerHTML = totalHtml;
+        });
+
+            
+        
+
+
+    </script>
+</body>
+</html>
