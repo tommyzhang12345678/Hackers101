@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Macau Traffic</title>
+    <link href="https://zencdn.net" rel="stylesheet" />
     <style>
         :root {
             --bg: #294c9d;
@@ -129,7 +130,7 @@
                 <div class="cam-info">
                     <span>ID: ${camId.toUpperCase()}</span>
                 </div>
-                <video controls autoplay muted name="media">
+                <video class="video-js" data-setup='{}' controls autoplay muted name="media">
                     <source src="https://streaming1.dsatmacau.com/traffic/${camId}.m3u8" type="application/x-mpegurl">
                 </video>
             `;
@@ -164,6 +165,6 @@
     document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
 </script>
-
+<script src="https://zencdn.net"></script>
 </body>
 </html>
