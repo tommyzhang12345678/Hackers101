@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macau Traffic</title>
+    <link href="https://zencdn.net" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #294c9d;
+            --card-bg: #1e293b;
+            --accent: #bdbdbd;
+            --text: #aeaeae;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 10;
+            padding: 20px;
+        }
+
+        header {
+            top: 0;
+            background: var(--bg);
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 30px;
+            z-index: 100;
+        }
+
+        .controls { display: flex; gap: 10px; margin-top: 15px; }
+
+        input, select, button {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        /* Responsive Grid */
+       /* Container for all video cards */
+        .video-grid {
+            display: grid;
+            /* This ensures columns are exactly 352px wide */
+            grid-template-columns: repeat(auto-fill, 352px); 
+            gap: 2px;
+            justify-content: center;
+        }
+
+        /* Individual Card */
+        .video-card {
+            width: 352px;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* The Video element */
+        video {
+            width: 352px;
+            height: 288px;
+            /* Forces the video to fill the 352x288 area exactly */
+            object-fit: fill; 
+            display: block;
+            background: #000;
+        }
+
+        /* Optional: Adjust cam info to sit inside or above without adding height */
+        .cam-info {
+            background: #000000;
+            color: #a8a8a8;
+            font-size: 12px;
+            padding: 1px 8px;
+            font-family: sans-serif;
+        }
+
+        
+        .counter { font-size: 14px; color: var(--accent); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Macau Traffic <b>made by You-Know-Who</b></h1>
+    <div id="totalCount" class="counter">Total Cameras: 0</div>
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search Camera ID...">
+        <select id="locationFilter">
+            <option value="all">All Locations</option>
+            <option value="m">Macau (M)</option>
+            <option value="t">Taipa (T)</option>
+            <option value="c">Coloane (C)</option>
+        </select>
+        <button onclick="resetFilters()">Reset</button>
+        <p>Data Source: DSAT (Direcção de Serviços de Trânsito)</p>
+        
+    </div>
+</header>
+
+<div class="video-grid" id="masterGrid">
+    <!-- Cards generate here automatically -->
+</div>
+<script type="module" src="/js/auth.js"></script>
+<script>
+    
+    const cameraList = [
+        'm1001', 'm1002', 'm1028', 'm1033', 'm1035', 'm1040', 'm1049', 'm1064', 'm1067', 'm1082', 'm1086', 'm1090', 'm1091', 'm1097', 'm1120', 'm1121', 'm1122', 'm1125', 'm1129', 'm1134', 'm1166', 'm1196',
+        'm2009', 'm2013', 'm2023', 'm2029', 'm2043', 'm2051', 'm2054', 'm2061', 'm2062', 'm2063', 'm2065', 'm2067', 'm2070', 'm2084', 'm2086', 'm2090', 'm2091', 'm2092', 'm2110', 'm2116', 'm2120', 'm2125', 
+        'm2126', 'm2129', 'm2134', 'm2169', 'm2173', 'm2179', 'm2181', 'm2198', 'm2202', 'm2208', 'm2252', 'm2259', 'm2277', 'm2287', 'm2289', 'm2303', 'm2310', 'm2322', 'm2331', 'm2332', 'm2346',
+        //
+        't1014', 't1019', 't1023', 't1030', 't1053', 't1056', 't1059', 't1076', 't1077', 't2015', 't2016', 't2019', 't4001', 't4008', 't4202',
+        'a1006', 'a1008', 'a1022', 'a1029', 'a1039',
+        
+    ];
+
+    const grid = document.getElementById('masterGrid');
+    const counterDisplay = document.getElementById('totalCount');
+    function generateCards() {
+        counterDisplay.innerText = `Total Cameras: ${cameraList.length}`;
+        
+        cameraList.forEach(camId => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.setAttribute('data-id', camId.toLowerCase());
+            
+            card.innerHTML = `
+                <div class="cam-info">
+                    <span>ID: ${camId.toUpperCase()}</span>
+                </div>
+                <video class="video-js" data-setup='{}' controls autoplay muted name="media">
+                    <source src="https://streaming1.dsatmacau.com/traffic/${camId}.m3u8" type="application/x-mpegurl">
+                </video>
+            `;
+            grid.appendChild(card);
+        });
+    }
+    function applyFilters() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const locationVal = document.getElementById('locationFilter').value;
+        const cards = document.querySelectorAll('.video-card');
+
+        cards.forEach(card => {
+            const id = card.getAttribute('data-id');
+            const matchesSearch = id.includes(searchText);
+            const matchesLoc = (locationVal === 'all' || id.startsWith(locationVal));
+
+            if (matchesSearch && matchesLoc) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('locationFilter').value = 'all';
+        applyFilters();
+    }
+    generateCards();
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('locationFilter').addEventListener('change', applyFilters);
+
+</script>
+<script src="https://zencdn.net"></script>
+</body>
+</html>
