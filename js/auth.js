@@ -118,3 +118,9 @@ export function logout() {
     console.error("Error logging out:", error);
   });
 }
+
+signOut(auth).then(() => {
+  console.log("Stale token cleared successfully! Refresh your page and log back in.");
+}).catch((error) => {
+  console.error("Sign out failed: ", error);
+});
