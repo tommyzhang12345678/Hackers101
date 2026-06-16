@@ -18,6 +18,7 @@ export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 
+
 export function login() {
   var email = document.getElementById('email').value;
   var password = password = document.getElementById('pass').value;
@@ -118,6 +119,9 @@ export function logout() {
     console.error("Error logging out:", error);
   });
 }
+
+
+const auth = getAuth(app);
 
 signOut(auth).then(() => {
   console.log("Stale token cleared successfully! Refresh your page and log back in.");
