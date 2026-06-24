@@ -12,7 +12,7 @@ querySnapshot.forEach((doc) => {
 // doc.data() is never undefined for query doc snapshots
     
 allData += list(doc.data());
-    //console.log(allData);
+    console.log(allData);
 });
 
 const downloadGrid = document.querySelector('.download-grid');
